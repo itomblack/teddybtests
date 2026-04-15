@@ -25,18 +25,19 @@ type ButtonAsLink = CommonProps &
 export type ButtonProps = ButtonAsButton | ButtonAsLink;
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-[var(--radius-pill)] " +
-  "font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 " +
+  "inline-flex items-center justify-center gap-2.5 " +
+  "uppercase tracking-[1.1px] text-[11px] leading-[1.5] " +
+  "transition-colors focus-visible:outline-none focus-visible:ring-2 " +
   "focus-visible:ring-offset-2 focus-visible:ring-[var(--color-brand)] " +
   "disabled:opacity-50 disabled:pointer-events-none whitespace-nowrap";
 
 const variants: Record<Variant, string> = {
   primary:
     "bg-[var(--color-brand)] text-[var(--color-brand-fg)] " +
-    "hover:bg-[var(--color-brand-hover)] active:bg-[var(--color-brand-active)]",
+    "hover:bg-[var(--color-brand-hover)] active:bg-[var(--color-brand-active)] active:border active:border-black",
   secondary:
-    "bg-transparent text-[var(--color-ink)] border border-[var(--color-ink)] " +
-    "hover:bg-[var(--color-ink)] hover:text-white",
+    "bg-white text-[var(--color-ink)] border border-black " +
+    "hover:border-[rgba(34,34,34,0.8)] active:border-black",
   ghost:
     "bg-transparent text-[var(--color-ink)] " +
     "hover:bg-[var(--color-surface-muted)]",
@@ -45,9 +46,9 @@ const variants: Record<Variant, string> = {
 };
 
 const sizes: Record<Size, string> = {
-  sm: "h-9 px-4 text-sm",
-  md: "h-11 px-6 text-base",
-  lg: "h-14 px-8 text-lg",
+  sm: "px-4 py-2",
+  md: "px-[25px] py-[11px]",
+  lg: "px-8 py-3.5",
 };
 
 export function Button(props: ButtonProps) {

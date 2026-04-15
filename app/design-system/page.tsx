@@ -2,29 +2,35 @@ import { SiteHeader } from "../components/SiteHeader";
 import { Button } from "../components/Button";
 
 const colorTokens: { name: string; varName: string; hex: string }[] = [
-  { name: "Brand",         varName: "--color-brand",         hex: "#e62b1e" },
-  { name: "Brand hover",   varName: "--color-brand-hover",   hex: "#c4241a" },
-  { name: "Brand active",  varName: "--color-brand-active",  hex: "#a01d15" },
-  { name: "Ink",           varName: "--color-ink",           hex: "#1a1a1a" },
-  { name: "Ink muted",     varName: "--color-ink-muted",     hex: "#5c5c5c" },
-  { name: "Line",          varName: "--color-line",          hex: "#e6e6e6" },
-  { name: "Surface",       varName: "--color-surface",       hex: "#ffffff" },
-  { name: "Surface muted", varName: "--color-surface-muted", hex: "#f5f5f5" },
-  { name: "Success",       varName: "--color-success",       hex: "#1a8f3c" },
-  { name: "Warning",       varName: "--color-warning",       hex: "#d97706" },
-  { name: "Danger",        varName: "--color-danger",        hex: "#d32f2f" },
+  { name: "Brand (Button Primary)", varName: "--color-brand",    hex: "#222222" },
+  { name: "Brand hover",   varName: "--color-brand-hover",      hex: "#4e4e4e" },
+  { name: "Brand active",  varName: "--color-brand-active",     hex: "#272727" },
+  { name: "Ink (Text Primary)", varName: "--color-ink",          hex: "#000000" },
+  { name: "Ink muted (Text Secondary)", varName: "--color-ink-muted", hex: "#6b7280" },
+  { name: "Line (Border Light)", varName: "--color-line",        hex: "#dddddd" },
+  { name: "Border Primary", varName: "--color-border-primary",  hex: "#a8a6a6" },
+  { name: "Surface Primary", varName: "--color-surface",        hex: "#ffffff" },
+  { name: "Surface Secondary", varName: "--color-surface-muted", hex: "#f3f3f3" },
+  { name: "Surface Dark",  varName: "--color-surface-dark",     hex: "#272727" },
+  { name: "Accent Navy",   varName: "--color-accent-navy",      hex: "#0b2149" },
+  { name: "Accent Gold",   varName: "--color-accent-gold",      hex: "#dcb447" },
+  { name: "Success",       varName: "--color-success",           hex: "#15803d" },
+  { name: "Warning",       varName: "--color-warning",           hex: "#dcb447" },
+  { name: "Danger (Error)", varName: "--color-danger",           hex: "#dc2626" },
 ];
 
 const typeTokens: { name: string; className: string; spec: string }[] = [
-  { name: "Display", className: "t-display", spec: "64 / 1.1 / 700" },
-  { name: "Heading 1", className: "t-h1", spec: "48 / 1.1 / 700" },
-  { name: "Heading 2", className: "t-h2", spec: "36 / 1.25 / 600" },
-  { name: "Heading 3", className: "t-h3", spec: "28 / 1.25 / 600" },
-  { name: "Heading 4", className: "t-h4", spec: "22 / 1.25 / 600" },
-  { name: "Body large", className: "t-body-lg", spec: "18 / 1.65 / 400" },
-  { name: "Body", className: "t-body", spec: "16 / 1.5 / 400" },
-  { name: "Body small", className: "t-body-sm", spec: "14 / 1.5 / 400" },
-  { name: "Caption", className: "t-caption", spec: "12 / 1.5 / 500 · uppercase" },
+  { name: "Display", className: "t-display", spec: "56 / 1.15 / 500 · Victor Serif" },
+  { name: "Heading 1", className: "t-h1", spec: "56 / 1.15 / 500 · Victor Serif" },
+  { name: "Heading 2", className: "t-h2", spec: "40 / 1.15 / 500 · Victor Serif" },
+  { name: "Heading 3", className: "t-h3", spec: "34 / 1.2 / 500 · Victor Serif" },
+  { name: "Heading 4", className: "t-h4", spec: "28 / 1.2 / 500 · Victor Serif" },
+  { name: "Body large", className: "t-body-lg", spec: "22 / 1.2 / 400 · Relative Pro" },
+  { name: "Body", className: "t-body", spec: "16 / 1.5 / 400 · Relative Pro" },
+  { name: "Body small", className: "t-body-sm", spec: "14 / 1.5 / 400 · Relative Pro" },
+  { name: "Label large", className: "t-label-lg", spec: "16 / 1.5 / 400 · Sharp Grotesk · uppercase" },
+  { name: "Label medium", className: "t-label-md", spec: "14 / 1.43 / 400 · Sharp Grotesk · uppercase" },
+  { name: "Caption", className: "t-caption", spec: "11 / 1.4 / 400 · Sharp Grotesk · uppercase" },
 ];
 
 function Section({
@@ -110,7 +116,7 @@ export default function DesignSystemPage() {
         <Section
           id="type"
           title="Typography"
-          description="Inter is the default placeholder. Swap the font in app/layout.tsx once the Figma type is confirmed."
+          description="Headings use Victor Serif, body text uses Relative Pro, and labels use Sharp Grotesk DB. Add .woff2 files to app/fonts/ to activate."
         >
           <ul className="divide-y divide-[var(--color-line)] rounded-[var(--radius-md)] border border-[var(--color-line)]">
             {typeTokens.map((t) => (
