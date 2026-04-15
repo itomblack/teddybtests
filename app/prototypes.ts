@@ -11,11 +11,11 @@ export type Prototype = {
 };
 
 export const prototypes: Prototype[] = [
-  // Example placeholder — replace as we build real prototypes.
-  // {
-  //   slug: "hello-world",
-  //   title: "Hello world",
-  //   description: "A first sample prototype.",
-  //   status: "draft",
-  // },
+  {
+    slug: "comparison-modal",
+    title: "Watch Comparison Modal",
+    description:
+      "Slide-up overlay comparing watch specifications side-by-side with accordion sections.",
+    status: "in-progress",
+  },
 ];
