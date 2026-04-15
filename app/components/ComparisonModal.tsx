@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Button } from "./Button";
 
@@ -100,6 +100,27 @@ function WatchCard({ watch }: { watch: WatchProduct }) {
   );
 }
 
+function CompactWatchCard({ watch }: { watch: WatchProduct }) {
+  return (
+    <div className="flex flex-1 min-w-0 items-center gap-3 overflow-hidden border-l border-[var(--color-line)] bg-white pr-3">
+      <div className="relative h-[69px] w-[56px] shrink-0 border-r border-[var(--color-line)]">
+        <Image
+          src={watch.image}
+          alt={watch.name}
+          fill
+          className="object-cover"
+          sizes="56px"
+          unoptimized
+        />
+      </div>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <span className="t-caption text-[var(--color-ink)]">{watch.brand}</span>
+        <p className="t-body-sm truncate text-[var(--color-ink-muted)]">{watch.name}</p>
+      </div>
+    </div>
+  );
+}
+
 function AccordionSection({
   section,
   watches,
@@ -167,26 +188,57 @@ function AccordionSection({
 /* ── Main modal ────────────────────────────────────────────────────── */
 
 export function ComparisonModal({ open, onClose, watches, sections }: ComparisonModalProps) {
+  const heroRowRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showCompactBar, setShowCompactBar] = useState(false);
+
+  useEffect(() => {
+    const heroEl = heroRowRef.current;
+    const scrollEl = scrollContainerRef.current;
+    if (!heroEl || !scrollEl) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowCompactBar(!entry.isIntersecting),
+      { root: scrollEl, threshold: 0 },
+    );
+    observer.observe(heroEl);
+    return () => observer.disconnect();
+  }, [open]);
+
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col justify-end bg-[rgba(0,0,0,0.5)]" onClick={onClose}>
       <div
+        ref={scrollContainerRef}
         className="flex max-h-[calc(100vh-85px)] w-full flex-col overflow-y-auto border-t border-[var(--color-line)] bg-white"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="sticky top-0 z-10 flex shrink-0 items-center gap-2 border-b border-[var(--color-line)] bg-white px-[var(--margin,40px)] py-5">
-          <h2 className="flex-1" style={{ fontFamily: "var(--font-heading)", fontSize: "var(--font-h4)", lineHeight: "var(--leading-relaxed)" }}>
-            Compare watches
-          </h2>
-          <button onClick={onClose} className="shrink-0" aria-label="Close">
-            <CloseIcon />
-          </button>
+        {/* Header + compact bar — sticky group */}
+        <div className="sticky top-0 z-10">
+          {/* Title header */}
+          <div className="flex items-center gap-2 border-b border-[var(--color-line)] bg-white px-[var(--margin,40px)] py-5">
+            <h2 className="flex-1" style={{ fontFamily: "var(--font-heading)", fontSize: "var(--font-h4)", lineHeight: "var(--leading-relaxed)" }}>
+              Compare watches
+            </h2>
+            <button onClick={onClose} className="shrink-0" aria-label="Close">
+              <CloseIcon />
+            </button>
+          </div>
+
+          {/* Compact sticky bar — appears when hero cards scroll away */}
+          {showCompactBar && (
+            <div className="flex gap-[var(--gutter,24px)] border-b border-[var(--color-line)] bg-[rgba(255,255,255,0.5)] px-[var(--margin,40px)] backdrop-blur-[6px]">
+              <div className="h-[69px] flex-1 min-w-0" />
+              {watches.map((watch, i) => (
+                <CompactWatchCard key={i} watch={watch} />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Hero watch row */}
-        <div className="flex shrink-0 gap-[var(--gutter,24px)] bg-white px-[var(--margin,40px)]">
+        <div ref={heroRowRef} className="flex shrink-0 gap-[var(--gutter,24px)] bg-white px-[var(--margin,40px)]">
           {/* Empty label column */}
           <div className="flex-1 min-w-0 py-4" />
           {/* Watch cards */}
