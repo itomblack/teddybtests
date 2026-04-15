@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+/* =========================================================================
+   Teddy B Design System — design tokens
+   These are placeholder values to be tuned against the Figma file:
+   https://www.figma.com/design/fZ5LWR0X40oq6uvIi8Bj5D/TED---Teddy-B-Design-System-2026
+   ========================================================================= */
+
+:root {
+  /* Color — neutrals */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-ink: #1a1a1a;
+  --color-ink-muted: #5c5c5c;
+  --color-line: #e6e6e6;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f5f5f5;
+
+  /* Color — brand */
+  --color-brand: #e62b1e;        /* TED red */
+  --color-brand-hover: #c4241a;
+  --color-brand-active: #a01d15;
+  --color-brand-fg: #ffffff;
+
+  /* Color — semantic (placeholders) */
+  --color-success: #1a8f3c;
+  --color-warning: #d97706;
+  --color-danger:  #d32f2f;
+
+  /* Background / Foreground (mapped to neutrals) */
+  --background: var(--color-white);
+  --foreground: var(--color-ink);
+
+  /* Type scale — based on a 4px baseline */
+  --font-display:  4rem;     /* 64px */
+  --font-h1:       3rem;     /* 48px */
+  --font-h2:       2.25rem;  /* 36px */
+  --font-h3:       1.75rem;  /* 28px */
+  --font-h4:       1.375rem; /* 22px */
+  --font-body-lg:  1.125rem; /* 18px */
+  --font-body:     1rem;     /* 16px */
+  --font-body-sm:  0.875rem; /* 14px */
+  --font-caption:  0.75rem;  /* 12px */
+
+  /* Line heights */
+  --leading-tight:   1.1;
+  --leading-snug:    1.25;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.65;
+
+  /* Font weights */
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semibold: 600;
+  --weight-bold:    700;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+}
+
+@theme inline {
+  --color-background:    var(--background);
+  --color-foreground:    var(--foreground);
+  --color-ink:           var(--color-ink);
+  --color-ink-muted:     var(--color-ink-muted);
+  --color-line:          var(--color-line);
+  --color-surface:       var(--color-surface);
+  --color-surface-muted: var(--color-surface-muted);
+  --color-brand:         var(--color-brand);
+  --color-brand-hover:   var(--color-brand-hover);
+  --color-brand-active:  var(--color-brand-active);
+  --color-brand-fg:      var(--color-brand-fg);
+  --color-success:       var(--color-success);
+  --color-warning:       var(--color-warning);
+  --color-danger:        var(--color-danger);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+html, body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: var(--font-body);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Type utility classes — keep these aligned with Figma type styles */
+.t-display  { font-size: var(--font-display);  line-height: var(--leading-tight); font-weight: var(--weight-bold);     letter-spacing: -0.02em; }
+.t-h1       { font-size: var(--font-h1);       line-height: var(--leading-tight); font-weight: var(--weight-bold);     letter-spacing: -0.02em; }
+.t-h2       { font-size: var(--font-h2);       line-height: var(--leading-snug);  font-weight: var(--weight-semibold); letter-spacing: -0.01em; }
+.t-h3       { font-size: var(--font-h3);       line-height: var(--leading-snug);  font-weight: var(--weight-semibold); }
+.t-h4       { font-size: var(--font-h4);       line-height: var(--leading-snug);  font-weight: var(--weight-semibold); }
+.t-body-lg  { font-size: var(--font-body-lg);  line-height: var(--leading-relaxed); font-weight: var(--weight-regular); }
+.t-body     { font-size: var(--font-body);     line-height: var(--leading-normal); font-weight: var(--weight-regular); }
+.t-body-sm  { font-size: var(--font-body-sm);  line-height: var(--leading-normal); font-weight: var(--weight-regular); }
+.t-caption  { font-size: var(--font-caption);  line-height: var(--leading-normal); font-weight: var(--weight-medium); letter-spacing: 0.08em; text-transform: uppercase; }
