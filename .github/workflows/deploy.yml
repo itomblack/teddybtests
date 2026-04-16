@@ -2,7 +2,9 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - claude/setup-teddyb-design-system-LuWim
   workflow_dispatch:
 
 permissions:
