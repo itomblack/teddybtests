@@ -3,9 +3,12 @@
 import { useState } from "react";
 import { SiteHeader } from "../../components/SiteHeader";
 import { Button } from "../../components/Button";
-import { ComparisonModal } from "../../components/ComparisonModal";
+import {
+  ComparisonModal,
+  type WatchProduct,
+} from "../../components/ComparisonModal";
 
-const watches = [
+const watches: WatchProduct[] = [
   {
     brand: "Omega",
     name: "Speedmaster Moonwatch Professional Moonshine\u2122 Gold and Steel 42mm \u2011 Silver on Leather Strap",

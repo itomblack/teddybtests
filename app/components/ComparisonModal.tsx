@@ -6,7 +6,7 @@ import { Button } from "./Button";
 
 /* ── Types ─────────────────────────────────────────────────────────── */
 
-type WatchProduct = {
+export type WatchProduct = {
   brand: string;
   name: string;
   image: string;
@@ -14,10 +14,12 @@ type WatchProduct = {
   specs: Record<string, string>;
 };
 
-type Section = {
+export type ComparisonSection = {
   title: string;
   rows: string[];
 };
+
+type Section = ComparisonSection;
 
 type ComparisonModalProps = {
   open: boolean;
