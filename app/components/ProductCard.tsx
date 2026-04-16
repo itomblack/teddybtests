@@ -11,6 +11,7 @@ export type Product = {
   image: string;
   tag?: string;
   reviewLink?: string;
+  specs?: Record<string, string>;
 };
 
 /* ── Icons ─────────────────────────────────────────────────────────── */
