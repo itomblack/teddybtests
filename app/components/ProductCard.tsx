@@ -10,7 +10,6 @@ export type Product = {
   price: string;
   image: string;
   tag?: string;
-  added?: boolean;
   reviewLink?: string;
 };
 
@@ -32,7 +31,7 @@ function CheckIcon() {
   );
 }
 
-function CompareIcon() {
+export function CompareIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
       <rect x="2" y="6" width="8" height="12" rx="1" />
@@ -53,10 +52,12 @@ function PlayIcon() {
 
 export function ProductCard({
   product,
-  onCompare,
+  isAdded,
+  onToggleCompare,
 }: {
   product: Product;
-  onCompare?: () => void;
+  isAdded?: boolean;
+  onToggleCompare?: () => void;
 }) {
   return (
     <div className="flex flex-col pb-[22px]">
@@ -87,24 +88,22 @@ export function ProductCard({
             <HeartIcon />
           </button>
 
-          {/* Overlay buttons */}
-          <div className="absolute bottom-3 left-3 flex flex-col gap-2 max-sm:bottom-1 max-sm:left-1">
-            {product.added && (
-              <button className="flex h-[25px] items-center gap-1 border border-white bg-[var(--color-surface-dark)] pl-2 pr-3.5 max-sm:pl-1 max-sm:pr-2">
-                <CheckIcon />
-                <span className="t-caption text-white">Added</span>
-              </button>
-            )}
-            {onCompare && (
+          {/* Compare / Added button */}
+          {onToggleCompare && (
+            <div className="absolute bottom-3 left-3 max-sm:bottom-1 max-sm:left-1">
               <button
-                onClick={onCompare}
-                className="flex h-[25px] items-center gap-1 border border-[var(--color-surface-muted)] bg-white pl-1.5 pr-3.5 max-sm:pl-1 max-sm:pr-2"
+                onClick={onToggleCompare}
+                className={`flex h-[25px] items-center gap-1 border ${
+                  isAdded
+                    ? "border-white bg-[var(--color-surface-dark)] text-white"
+                    : "border-[var(--color-surface-muted)] bg-white text-black"
+                } pl-1.5 pr-3.5 max-sm:pl-1 max-sm:pr-2`}
               >
-                <CompareIcon />
-                <span className="t-caption text-black">Compare</span>
+                {isAdded ? <CheckIcon /> : <CompareIcon />}
+                <span className="t-caption">{isAdded ? "Added" : "Compare"}</span>
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Watch review button */}

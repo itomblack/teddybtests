@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { SiteHeader } from "../../components/SiteHeader";
 import { ProductCard, type Product } from "../../components/ProductCard";
+import { CompareDrawer } from "../../components/CompareDrawer";
 import { ComparisonModal } from "../../components/ComparisonModal";
+import type { WatchProduct } from "../../components/ComparisonModal";
 
 /* ── Inline SVG icons ─────────────────────────────────────────────── */
 
@@ -32,7 +34,6 @@ const products: Product[] = [
     price: "$475",
     image: "https://www.figma.com/api/mcp/asset/8bd0ea7c-0a9b-4ad4-bf8e-a64b2c4529d6",
     tag: "Exclusive",
-    added: true,
   },
   {
     brand: "Omega",
@@ -78,118 +79,21 @@ const products: Product[] = [
   },
 ];
 
-/* ── Comparison modal data (reused from comparison-modal prototype) ─ */
+/* ── Stub specs for comparison modal ──────────────────────────────── */
 
-const comparisonWatches = [
-  {
-    brand: "Omega",
-    name: "Speedmaster Moonwatch Professional Moonshine\u2122 Gold and Steel 42mm \u2011 Silver on Leather Strap",
-    image: "https://www.figma.com/api/mcp/asset/568d234d-6d61-4fb1-9419-c62749bd4609",
-    reviewLink: "#",
-    specs: {
-      "Teddy's Review": "Watch now",
-      Price: "$13,100",
-      Style: "Chronograph",
-      "Case Size": "42 mm",
-      Thickness: "13.2 mm",
-      "Lug to Lug": "47.5 mm",
-      "Lug Width": "20 mm",
-      "Water Resistance": "50m",
-      "Movement Type": "Hand-winding",
-      Crystal: "Scratch-resistant sapphire (AR coated)",
-      Reference: "310.23.42.50.02.001",
-      "Case Material": "Bi-colour steel & 18K Moonshine\u2122 Gold",
-      "Case Back": "Transparent sapphire crystal caseback",
-      Bezel: "Asymmetrical black ceramic, tachymeter, Ceragold\u2122",
-      "Clasp / Buckle": "Foldover clasp",
-      "Attachment Type": "Leather",
-      "Dial Color": "Silver",
-      Hands: "18K Moonshine\u2122 Gold",
-      "Strap / Bracelet": "Brown alligator leather strap",
-      Weight: "96 g",
-      "Movement Ref": "3861",
-      "Power Reserve": "50 Hours",
-      Accuracy: "N/A",
-      Functions: "Manual-winding chronograph, Co-Axial, Master Chronometer, METAS certified, anti-magnetic 15,000 gauss",
-      Features: "Anti-magnetic, master chronometer certified, silicon balance spring, rhodium finish",
-      Jewels: "26 Jewels",
-      "Movement Details": "Manual-winding, Co-Axial Master Chronometer",
-    },
-  },
-  {
-    brand: "Omega",
-    name: 'Speedmaster Moonwatch Professional 18K Moonshine\u2122 Gold "Reverse Panda" 42mm - Black on Bracelet',
-    image: "https://www.figma.com/api/mcp/asset/a20c0cf8-899f-41bd-854a-25d8d81b5338",
-    specs: {
-      Price: "$49,500",
-      Style: "Chronograph",
-      "Case Size": "42 mm",
-      Thickness: "13.63 mm",
-      "Lug to Lug": "47.46 mm",
-      "Lug Width": "20 mm",
-      "Water Resistance": "50m",
-      "Movement Type": "Hand-winding",
-      Crystal: "Scratch-resistant sapphire (AR coated)",
-      Reference: "O31060425001002",
-      "Case Material": "Moonshine\u2122 Gold",
-      "Case Back": "18K Moonshine\u2122 Gold & sapphire caseback",
-      Bezel: "Black ceramic bezel ring",
-      "Clasp / Buckle": "Foldover clasp with comfort setting",
-      "Attachment Type": "Bracelet",
-      "Dial Color": "Black",
-      Hands: "18K Moonshine\u2122 Gold",
-      "Strap / Bracelet": "Polished & brushed Moonshine\u2122 Gold bracelet",
-      Weight: "224 g",
-      "Movement Ref": "3861",
-      "Power Reserve": "50 Hours",
-      Accuracy: "0 to +5 secs/day",
-      Functions: "Chronograph, small seconds, tachymeter",
-      Features: "Anti-magnetic 15,000 gauss, silicon balance spring, rhodium finish",
-      Jewels: "N/A",
-      "Movement Details": "Manual-winding chronograph, Co-Axial Master Chronometer",
-    },
-  },
-  {
-    brand: "Grand Seiko",
-    name: 'SBGA413 "Spring Shunbun" Heritage Spring Drive 40mm - Pink on Bracelet',
-    image: "https://www.figma.com/api/mcp/asset/50fed59a-56a9-4050-86b8-ba8d89eaabc3",
-    reviewLink: "#",
-    specs: {
-      "Teddy's Review": "Watch now",
-      Price: "$7,200",
-      Style: "Everyday",
-      "Case Size": "40 mm",
-      Thickness: "12.7 mm",
-      "Lug to Lug": "47 mm",
-      "Lug Width": "21 mm",
-      "Water Resistance": "100m",
-      "Movement Type": "Spring Drive",
-      Crystal: "Box-shape sapphire crystal",
-      Reference: "SBGA413",
-      "Case Material": "High-intensity titanium",
-      "Case Back": "Stainless steel transparent sapphire",
-      Bezel: "Bezel-free",
-      "Clasp / Buckle": "Three-fold clasp",
-      "Attachment Type": "Bracelet",
-      "Dial Color": "Pink",
-      Hands: "N/A",
-      "Strap / Bracelet": "High-intensity titanium bracelet",
-      Weight: "N/A",
-      "Movement Ref": "9R65",
-      "Power Reserve": "72 Hours",
-      Accuracy: "\u00b11 sec/day / \u00b115 secs/month",
-      Functions: "Time and date",
-      Features: "Power reserve indicator",
-      Jewels: "30 Jewels",
-      "Movement Details": "Spring Drive",
-    },
-  },
-];
+function productToWatch(product: Product): WatchProduct {
+  return {
+    brand: product.brand,
+    name: product.name,
+    image: product.image,
+    specs: { Price: product.price },
+  };
+}
 
 const comparisonSections = [
   {
     title: "Overview",
-    rows: ["Teddy's Review", "Price", "Style", "Case Size", "Thickness", "Lug to Lug", "Lug Width", "Water Resistance", "Movement Type", "Crystal", "Reference"],
+    rows: ["Price", "Style", "Case Size", "Thickness", "Lug to Lug", "Lug Width", "Water Resistance", "Movement Type", "Crystal", "Reference"],
   },
   {
     title: "Case & Exterior",
@@ -215,12 +119,22 @@ function FilterChip({ label }: { label: string }) {
 /* ── Page ──────────────────────────────────────────────────────────── */
 
 export default function ShopPage() {
+  const [compareItems, setCompareItems] = useState<Product[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
+
+  function toggleCompare(product: Product) {
+    setCompareItems((prev) => {
+      const exists = prev.some((p) => p.name === product.name);
+      if (exists) return prev.filter((p) => p.name !== product.name);
+      if (prev.length >= 3) return prev;
+      return [...prev, product];
+    });
+  }
 
   return (
     <>
       <SiteHeader />
-      <main className="bg-white">
+      <main className="bg-white pb-24">
         {/* Breadcrumbs */}
         <div className="mx-auto w-full max-w-[1440px] px-10 pt-8 pb-2 max-sm:px-6 max-sm:pt-4">
           <nav className="flex items-center gap-1 max-sm:gap-0.5">
@@ -278,16 +192,28 @@ export default function ShopPage() {
             <ProductCard
               key={i}
               product={product}
-              onCompare={() => setModalOpen(true)}
+              isAdded={compareItems.some((p) => p.name === product.name)}
+              onToggleCompare={() => toggleCompare(product)}
             />
           ))}
         </div>
       </main>
 
+      {/* Compare drawer */}
+      <CompareDrawer
+        items={compareItems}
+        onRemove={(index) =>
+          setCompareItems((prev) => prev.filter((_, i) => i !== index))
+        }
+        onClearAll={() => setCompareItems([])}
+        onCompare={() => setModalOpen(true)}
+      />
+
+      {/* Comparison modal */}
       <ComparisonModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        watches={comparisonWatches}
+        watches={compareItems.map(productToWatch)}
         sections={comparisonSections}
       />
     </>

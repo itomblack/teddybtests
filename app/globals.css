@@ -139,14 +139,16 @@ html, body {
 .t-label-md { font-family: var(--font-label); font-size: 0.875rem; line-height: 1.43; font-weight: var(--weight-regular); letter-spacing: 1.4px; text-transform: uppercase; }
 
 /* Comparison modal spacing */
-.comparison-modal {
-  --margin: 40px;
-  --gutter: 24px;
-}
-
-@media (max-width: 639px) {
+@layer base {
   .comparison-modal {
-    --margin: 16px;
-    --gutter: 12px;
+    --margin: 40px;
+    --gutter: 24px;
+  }
+
+  @media (max-width: 639px) {
+    .comparison-modal {
+      --margin: 16px;
+      --gutter: 12px;
+    }
   }
 }
