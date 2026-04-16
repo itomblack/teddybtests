@@ -88,6 +88,7 @@
 
   .t-label-lg { font-size: 0.875rem; /* 14px */ }
   .t-label-md { font-size: 0.875rem; /* 14px */ }
+
 }
 
 @theme inline {
@@ -136,3 +137,16 @@ html, body {
 .t-caption  { font-family: var(--font-label); font-size: var(--font-caption);  line-height: 1.4; font-weight: var(--weight-regular); letter-spacing: 1.1px; text-transform: uppercase; }
 .t-label-lg { font-family: var(--font-label); font-size: 1rem;     line-height: var(--leading-normal); font-weight: var(--weight-regular); letter-spacing: 1.6px; text-transform: uppercase; }
 .t-label-md { font-family: var(--font-label); font-size: 0.875rem; line-height: 1.43; font-weight: var(--weight-regular); letter-spacing: 1.4px; text-transform: uppercase; }
+
+/* Comparison modal spacing */
+.comparison-modal {
+  --margin: 40px;
+  --gutter: 24px;
+}
+
+@media (max-width: 639px) {
+  .comparison-modal {
+    --margin: 16px;
+    --gutter: 12px;
+  }
+}

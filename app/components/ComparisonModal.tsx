@@ -72,9 +72,9 @@ function HeartIcon() {
 
 /* ── Sub-components ────────────────────────────────────────────────── */
 
-function WatchCard({ watch }: { watch: WatchProduct }) {
+function WatchCard({ watch, mobileHidden }: { watch: WatchProduct; mobileHidden?: boolean }) {
   return (
-    <div className="flex flex-1 min-w-0 flex-col gap-4 p-5">
+    <div className={`flex flex-1 min-w-0 flex-col gap-4 p-5 max-sm:p-0 max-sm:py-4${mobileHidden ? " max-sm:hidden" : ""}`}>
       {/* Image */}
       <div className="relative flex aspect-square items-center justify-center overflow-hidden bg-[var(--color-surface-muted)]">
         <Image
@@ -102,10 +102,10 @@ function WatchCard({ watch }: { watch: WatchProduct }) {
   );
 }
 
-function CompactWatchCard({ watch }: { watch: WatchProduct }) {
+function CompactWatchCard({ watch, mobileHidden }: { watch: WatchProduct; mobileHidden?: boolean }) {
   return (
-    <div className="flex flex-1 min-w-0 items-center gap-3 overflow-hidden border-l border-[var(--color-line)] bg-white pr-3">
-      <div className="relative h-[69px] w-[56px] shrink-0 border-r border-[var(--color-line)]">
+    <div className={`flex flex-1 min-w-0 items-center gap-3 overflow-hidden border-l border-[var(--color-line)] bg-white pr-3 max-sm:gap-2 max-sm:pr-2${mobileHidden ? " max-sm:hidden" : ""}`}>
+      <div className="relative h-[69px] w-[56px] shrink-0 border-r border-[var(--color-line)] max-sm:h-[44px] max-sm:w-[44px] max-sm:border-r-0">
         <Image
           src={watch.image}
           alt={watch.name}
@@ -115,7 +115,7 @@ function CompactWatchCard({ watch }: { watch: WatchProduct }) {
           unoptimized
         />
       </div>
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col max-sm:pr-2">
         <span className="t-caption text-[var(--color-ink)]">{watch.brand}</span>
         <p className="t-body-sm truncate text-[var(--color-ink-muted)]">{watch.name}</p>
       </div>
@@ -126,24 +126,36 @@ function CompactWatchCard({ watch }: { watch: WatchProduct }) {
 function AccordionSection({
   section,
   watches,
+  mobileMaxWatches,
+  collapsible = false,
 }: {
   section: Section;
   watches: WatchProduct[];
+  mobileMaxWatches: number;
+  collapsible?: boolean;
 }) {
   const [open, setOpen] = useState(true);
 
   return (
     <div>
       {/* Accordion header */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex w-full items-center gap-2 border-y border-[var(--color-line)] bg-white px-[var(--margin,40px)] py-5"
-      >
-        <span className="t-h4 flex-1 text-left" style={{ fontFamily: "var(--font-heading)", fontSize: "var(--font-body-lg)" }}>
-          {section.title}
-        </span>
-        <ChevronUpIcon open={open} />
-      </button>
+      {collapsible ? (
+        <button
+          onClick={() => setOpen(!open)}
+          className="flex w-full items-center gap-2 border-y border-[var(--color-line)] bg-white px-[var(--margin)] py-5"
+        >
+          <span className="t-h4 flex-1 text-left" style={{ fontFamily: "var(--font-heading)" }}>
+            {section.title}
+          </span>
+          <ChevronUpIcon open={open} />
+        </button>
+      ) : (
+        <div className="flex w-full items-center border-y border-[var(--color-line)] bg-white px-[var(--margin)] py-5">
+          <span className="t-h4 flex-1 text-left" style={{ fontFamily: "var(--font-heading)" }}>
+            {section.title}
+          </span>
+        </div>
+      )}
 
       {/* Rows */}
       {open && (
@@ -155,29 +167,52 @@ function AccordionSection({
             return (
               <div
                 key={rowKey}
-                className={`flex gap-[var(--gutter,24px)] items-center px-[var(--margin,40px)] ${bg}`}
+                className={`${bg} px-[var(--margin)]`}
               >
-                {/* Label */}
-                <div className="flex-1 min-w-0 py-4">
-                  <span className="t-body-sm text-[#737373] whitespace-nowrap">{rowKey}</span>
-                </div>
-                {/* Values */}
-                {watches.map((watch, wi) => (
-                  <div
-                    key={wi}
-                    className={`flex-1 min-w-0 px-5 py-4 ${bg} flex items-center gap-2`}
-                  >
-                    {rowKey === "Teddy's Review" && watch.reviewLink ? (
-                      <a href={watch.reviewLink} className="t-body-sm flex items-center gap-2 text-[#141414]">
-                        Watch now <PlayIcon />
-                      </a>
-                    ) : (
-                      <span className="t-body-sm text-[#141414]">
-                        {watch.specs[rowKey] || "-"}
-                      </span>
-                    )}
+                {/* Desktop: single row with label + values */}
+                <div className={`flex gap-[var(--gutter)] items-start max-sm:hidden`}>
+                  <div className="flex-1 min-w-0 py-4">
+                    <span className="t-body-sm text-[#737373] whitespace-nowrap">{rowKey}</span>
                   </div>
-                ))}
+                  {watches.map((watch, wi) => (
+                    <div
+                      key={wi}
+                      className="flex-1 min-w-0 px-5 py-4 flex items-center gap-2"
+                    >
+                      {rowKey === "Teddy's Review" && watch.reviewLink ? (
+                        <a href={watch.reviewLink} className="t-body-sm flex items-center gap-2 text-[#141414]">
+                          Watch now <PlayIcon />
+                        </a>
+                      ) : (
+                        <span className="t-body-sm text-[#141414]">
+                          {watch.specs[rowKey] || "-"}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Mobile: label on top, values in row below */}
+                <div className="sm:hidden">
+                  <div className="pt-3 pb-1">
+                    <span className="t-body-sm text-[#737373]">{rowKey}</span>
+                  </div>
+                  <div className="flex gap-[var(--gutter)] pb-3">
+                    {watches.slice(0, mobileMaxWatches).map((watch, wi) => (
+                      <div key={wi} className="flex-1 min-w-0 flex items-center gap-2">
+                        {rowKey === "Teddy's Review" && watch.reviewLink ? (
+                          <a href={watch.reviewLink} className="t-body-sm flex items-center gap-2 text-[#141414]">
+                            Watch now <PlayIcon />
+                          </a>
+                        ) : (
+                          <span className="t-body-sm text-[#141414] font-medium">
+                            {watch.specs[rowKey] || "-"}
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             );
           })}
@@ -209,17 +244,19 @@ export function ComparisonModal({ open, onClose, watches, sections }: Comparison
 
   if (!open) return null;
 
+  const mobileMax = 2;
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col justify-end bg-[rgba(0,0,0,0.5)]" onClick={onClose}>
       <div
         ref={scrollContainerRef}
-        className="flex max-h-[calc(100vh-85px)] w-full flex-col overflow-y-auto border-t border-[var(--color-line)] bg-white"
+        className="comparison-modal flex max-h-[calc(100vh-85px)] w-full flex-col overflow-y-auto border-t border-[var(--color-line)] bg-white max-sm:max-h-dvh"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header + compact bar — sticky group */}
         <div className="sticky top-0 z-10">
           {/* Title header */}
-          <div className="flex items-center gap-2 border-b border-[var(--color-line)] bg-white px-[var(--margin,40px)] py-5">
+          <div className="flex items-center gap-2 border-b border-[var(--color-line)] bg-white px-[var(--margin)] py-5">
             <h2 className="flex-1" style={{ fontFamily: "var(--font-heading)", fontSize: "var(--font-h4)", lineHeight: "var(--leading-relaxed)" }}>
               Compare watches
             </h2>
@@ -230,28 +267,28 @@ export function ComparisonModal({ open, onClose, watches, sections }: Comparison
 
           {/* Compact sticky bar — appears when hero cards scroll away */}
           {showCompactBar && (
-            <div className="flex gap-[var(--gutter,24px)] border-b border-[var(--color-line)] bg-[rgba(255,255,255,0.5)] px-[var(--margin,40px)] backdrop-blur-[6px]">
-              <div className="h-[69px] flex-1 min-w-0" />
+            <div className="flex gap-[var(--gutter)] border-b border-[var(--color-line)] bg-[rgba(255,255,255,0.5)] px-[var(--margin)] backdrop-blur-[6px] max-sm:gap-0 max-sm:px-0">
+              <div className="h-[69px] flex-1 min-w-0 max-sm:hidden" />
               {watches.map((watch, i) => (
-                <CompactWatchCard key={i} watch={watch} />
+                <CompactWatchCard key={i} watch={watch} mobileHidden={i >= mobileMax} />
               ))}
             </div>
           )}
         </div>
 
         {/* Hero watch row */}
-        <div ref={heroRowRef} className="flex shrink-0 gap-[var(--gutter,24px)] bg-white px-[var(--margin,40px)]">
-          {/* Empty label column */}
-          <div className="flex-1 min-w-0 py-4" />
+        <div ref={heroRowRef} className="flex shrink-0 gap-[var(--gutter)] bg-white px-[var(--margin)]">
+          {/* Empty label column — hidden on mobile */}
+          <div className="flex-1 min-w-0 py-4 max-sm:hidden" />
           {/* Watch cards */}
           {watches.map((watch, i) => (
-            <WatchCard key={i} watch={watch} />
+            <WatchCard key={i} watch={watch} mobileHidden={i >= mobileMax} />
           ))}
         </div>
 
         {/* Comparison sections */}
         {sections.map((section) => (
-          <AccordionSection key={section.title} section={section} watches={watches} />
+          <AccordionSection key={section.title} section={section} watches={watches} mobileMaxWatches={mobileMax} />
         ))}
       </div>
     </div>

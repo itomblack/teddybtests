@@ -12,6 +12,13 @@ export type Prototype = {
 
 export const prototypes: Prototype[] = [
   {
+    slug: "shop",
+    title: "Shop Watches",
+    description:
+      "Product listing page with grid, filters, and compare functionality that launches the comparison modal.",
+    status: "in-progress",
+  },
+  {
     slug: "comparison-modal",
     title: "Watch Comparison Modal",
     description:
