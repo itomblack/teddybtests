@@ -12,6 +12,13 @@ export type Prototype = {
 
 export const prototypes: Prototype[] = [
   {
+    slug: "search",
+    title: "Quick Search",
+    description:
+      "Three variations of quick search: clean overlay, recently-viewed default, and compact dropdown.",
+    status: "in-progress",
+  },
+  {
     slug: "shop",
     title: "Shop Watches",
     description:
