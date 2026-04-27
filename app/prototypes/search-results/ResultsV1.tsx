@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { resultProducts, resultContent, resultPages, filters, QUERY, TOTAL_PRODUCTS, TOTAL_CONTENT, TOTAL_PAGES, TOTAL_ALL } from "./resultsData";
 import { SearchHeader, ProductGridCard, ProductListRow, ContentCard, PageResult, FilterSidebar, GridIcon, ListIcon } from "./SharedUI";
+import { MobileFilterSheet, MobileFilterSortBar } from "./MobileFilterSheet";
 
 type Tab = "all" | "products" | "content" | "pages";
 
@@ -10,6 +11,9 @@ export function ResultsV1() {
   const [tab, setTab] = useState<Tab>("all");
   const [productView, setProductView] = useState<"grid" | "list">("grid");
   const [shown, setShown] = useState(6);
+  const [mobileSheet, setMobileSheet] = useState<"filter" | "sort" | null>(null);
+  const [sort, setSort] = useState("relevance");
+  const sortLabel = sort === "relevance" ? "Relevant" : sort === "price-asc" ? "Price ↑" : sort === "price-desc" ? "Price ↓" : "Newest";
 
   const tabs: { key: Tab; label: string; count: number }[] = [
     { key: "all", label: "All", count: TOTAL_ALL },
@@ -23,19 +27,21 @@ export function ResultsV1() {
       <SearchHeader query={QUERY} />
 
       {/* Tabs */}
-      <div className="border-b border-[var(--color-line)] bg-white px-6">
-        <div className="mx-auto max-w-6xl flex gap-0">
-          {tabs.map((t) => (
-            <button
-              key={t.key}
-              onClick={() => { setTab(t.key); setShown(6); }}
-              className={`px-5 py-3 t-label-md transition-colors border-b-2 ${
-                tab === t.key ? "border-[var(--color-ink)] text-[var(--color-ink)]" : "border-transparent text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
-              }`}
-            >
-              {t.label} ({t.count})
-            </button>
-          ))}
+      <div className="border-b border-[var(--color-line)] bg-white">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="flex gap-0 overflow-x-auto -mx-6 px-6 scrollbar-hide">
+            {tabs.map((t) => (
+              <button
+                key={t.key}
+                onClick={() => { setTab(t.key); setShown(6); }}
+                className={`shrink-0 px-4 sm:px-5 py-3 t-label-md transition-colors border-b-2 whitespace-nowrap ${
+                  tab === t.key ? "border-[var(--color-ink)] text-[var(--color-ink)]" : "border-transparent text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+                }`}
+              >
+                {t.label} <span className="text-[var(--color-ink-muted)]">({t.count})</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -61,8 +67,16 @@ export function ResultsV1() {
               </div>
             )}
 
+            {/* Mobile filter+sort */}
+            <MobileFilterSortBar
+              count={TOTAL_PRODUCTS}
+              onOpenFilter={() => setMobileSheet("filter")}
+              onOpenSort={() => setMobileSheet("sort")}
+              sortLabel={sortLabel}
+            />
+
             {/* Product grid */}
-            <div className="flex items-baseline justify-between mb-4">
+            <div className="flex items-baseline justify-between mb-4 max-lg:hidden">
               <h3 className="t-body-sm text-[var(--color-ink-muted)]">
                 Showing {Math.min(shown, resultProducts.length)} of {TOTAL_PRODUCTS} products
               </h3>
@@ -96,7 +110,13 @@ export function ResultsV1() {
         {/* Products tab */}
         {tab === "products" && (
           <div>
-            <div className="flex items-baseline justify-between mb-4">
+            <MobileFilterSortBar
+              count={TOTAL_PRODUCTS}
+              onOpenFilter={() => setMobileSheet("filter")}
+              onOpenSort={() => setMobileSheet("sort")}
+              sortLabel={sortLabel}
+            />
+            <div className="flex items-baseline justify-between mb-4 max-lg:hidden">
               <h3 className="t-body-sm text-[var(--color-ink-muted)]">{TOTAL_PRODUCTS} products for &ldquo;{QUERY}&rdquo;</h3>
               <div className="flex items-center gap-2">
                 <button onClick={() => setProductView("grid")}><GridIcon active={productView === "grid"} /></button>
@@ -143,6 +163,15 @@ export function ResultsV1() {
           </div>
         )}
       </div>
+
+      <MobileFilterSheet
+        open={mobileSheet !== null}
+        onClose={() => setMobileSheet(null)}
+        filters={filters}
+        mode={mobileSheet ?? "filter"}
+        sort={sort}
+        onSortChange={setSort}
+      />
     </div>
   );
 }

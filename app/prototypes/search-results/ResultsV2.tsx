@@ -3,18 +3,22 @@
 import { useState } from "react";
 import { resultProducts, resultContent, resultPages, filters, QUERY, TOTAL_ALL, TOTAL_PRODUCTS } from "./resultsData";
 import { SearchHeader, ProductGridCard, ContentCard, PageResult, FilterSidebar } from "./SharedUI";
+import { MobileFilterSheet, MobileFilterSortBar } from "./MobileFilterSheet";
 
 export function ResultsV2() {
   const [shown, setShown] = useState(6);
   const [contentExpanded, setContentExpanded] = useState(false);
+  const [mobileSheet, setMobileSheet] = useState<"filter" | "sort" | null>(null);
+  const [sort, setSort] = useState("relevance");
+  const sortLabel = sort === "relevance" ? "Relevant" : sort === "price-asc" ? "Price ↑" : sort === "price-desc" ? "Price ↓" : "Newest";
 
   return (
     <div>
       <SearchHeader query={QUERY} />
 
-      <div className="mx-auto max-w-6xl px-6 py-8">
+      <div className="mx-auto max-w-6xl px-6 py-8 max-sm:py-5">
         {/* Result count */}
-        <div className="mb-6">
+        <div className="mb-6 max-sm:mb-4">
           <h1 className="t-h3">{TOTAL_ALL} results for &ldquo;{QUERY}&rdquo;</h1>
         </div>
 
@@ -71,7 +75,16 @@ export function ResultsV2() {
         <div className="border-t border-[var(--color-line)] mb-6" />
 
         {/* Products section — main content */}
-        <div className="flex items-baseline justify-between mb-4">
+        {/* Mobile filter+sort */}
+        <MobileFilterSortBar
+          count={TOTAL_PRODUCTS}
+          onOpenFilter={() => setMobileSheet("filter")}
+          onOpenSort={() => setMobileSheet("sort")}
+          sortLabel={sortLabel}
+        />
+
+        {/* Desktop count + sort */}
+        <div className="flex items-baseline justify-between mb-4 max-lg:hidden">
           <h2 className="t-body-sm text-[var(--color-ink-muted)]">
             Showing {Math.min(shown, resultProducts.length)} of {TOTAL_PRODUCTS} products
           </h2>
@@ -95,7 +108,7 @@ export function ResultsV2() {
               <div className="mt-8 text-center">
                 <button
                   onClick={() => setShown((s) => s + 6)}
-                  className="border border-[var(--color-ink)] px-8 py-3 t-label-md text-[var(--color-ink)] hover:bg-[var(--color-surface-muted)]"
+                  className="border border-[var(--color-ink)] px-8 py-3 t-label-md text-[var(--color-ink)] hover:bg-[var(--color-surface-muted)] max-sm:w-full"
                 >
                   Load more ({resultProducts.length - shown} remaining)
                 </button>
@@ -104,6 +117,15 @@ export function ResultsV2() {
           </div>
         </div>
       </div>
+
+      <MobileFilterSheet
+        open={mobileSheet !== null}
+        onClose={() => setMobileSheet(null)}
+        filters={filters}
+        mode={mobileSheet ?? "filter"}
+        sort={sort}
+        onSortChange={setSort}
+      />
     </div>
   );
 }

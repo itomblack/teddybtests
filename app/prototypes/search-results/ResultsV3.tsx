@@ -3,12 +3,16 @@
 import { useState } from "react";
 import { resultProducts, resultContent, resultPages, filters, QUERY, TOTAL_PRODUCTS, TOTAL_CONTENT, TOTAL_PAGES, TOTAL_ALL } from "./resultsData";
 import { SearchHeader, ProductGridCard, ContentCard, PageResult, FilterSidebar } from "./SharedUI";
+import { MobileFilterSheet, MobileFilterSortBar } from "./MobileFilterSheet";
 
 type Scenario = "product-heavy" | "mixed" | "content-heavy";
 
 export function ResultsV3() {
   const [scenario, setScenario] = useState<Scenario>("product-heavy");
   const [shown, setShown] = useState(6);
+  const [mobileSheet, setMobileSheet] = useState<"filter" | "sort" | null>(null);
+  const [sort, setSort] = useState("relevance");
+  const sortLabel = sort === "relevance" ? "Relevant" : sort === "price-asc" ? "Price ↑" : sort === "price-desc" ? "Price ↓" : "Newest";
 
   const scenarios: { key: Scenario; label: string; desc: string }[] = [
     { key: "product-heavy", label: "Product-heavy (>70%)", desc: "e.g. \"grand seiko\" — mostly products, content in slim top bar" },
@@ -62,8 +66,16 @@ export function ResultsV3() {
               <button className="shrink-0 t-caption text-[var(--color-ink)] hover:underline">+{TOTAL_CONTENT + TOTAL_PAGES - 3} more</button>
             </div>
 
+            {/* Mobile filter+sort */}
+            <MobileFilterSortBar
+              count={TOTAL_PRODUCTS}
+              onOpenFilter={() => setMobileSheet("filter")}
+              onOpenSort={() => setMobileSheet("sort")}
+              sortLabel={sortLabel}
+            />
+
             {/* Products */}
-            <div className="flex items-baseline justify-between mb-4">
+            <div className="flex items-baseline justify-between mb-4 max-lg:hidden">
               <h2 className="t-body-sm text-[var(--color-ink-muted)]">{TOTAL_PRODUCTS} products</h2>
               <select className="t-body-sm border border-[var(--color-line)] px-3 py-1.5 bg-white">
                 <option>Most relevant</option>
@@ -86,11 +98,11 @@ export function ResultsV3() {
           </div>
         )}
 
-        {/* Mixed: two-column, content left ~30%, products right ~70% */}
+        {/* Mixed: two-column on desktop, products-first on mobile */}
         {scenario === "mixed" && (
           <div className="flex gap-8 max-lg:flex-col">
-            {/* Left: content + pages */}
-            <div className="w-[320px] shrink-0 max-lg:w-full">
+            {/* Content + pages — order-2 on mobile so products appear first */}
+            <div className="w-[320px] shrink-0 max-lg:w-full max-lg:order-2">
               <h2 className="t-caption text-[var(--color-ink-muted)] mb-3">Pages & Content ({TOTAL_CONTENT + TOTAL_PAGES})</h2>
               <div className="divide-y divide-[var(--color-line)] border border-[var(--color-line)] bg-[var(--color-surface-muted)]">
                 {resultPages.map((p) => (
@@ -102,8 +114,8 @@ export function ResultsV3() {
               </div>
             </div>
 
-            {/* Right: products */}
-            <div className="flex-1 min-w-0">
+            {/* Products — order-1 on mobile */}
+            <div className="flex-1 min-w-0 max-lg:order-1">
               <div className="flex items-baseline justify-between mb-4">
                 <h2 className="t-caption text-[var(--color-ink-muted)]">Products ({TOTAL_PRODUCTS})</h2>
                 <select className="t-body-sm border border-[var(--color-line)] px-3 py-1.5 bg-white">
@@ -116,7 +128,7 @@ export function ResultsV3() {
               </div>
               {shown < resultProducts.length && (
                 <div className="mt-8 text-center">
-                  <button onClick={() => setShown((s) => s + 6)} className="border border-[var(--color-ink)] px-8 py-3 t-label-md hover:bg-[var(--color-surface-muted)]">Load more</button>
+                  <button onClick={() => setShown((s) => s + 6)} className="border border-[var(--color-ink)] px-8 py-3 t-label-md hover:bg-[var(--color-surface-muted)] max-sm:w-full">Load more</button>
                 </div>
               )}
             </div>
@@ -154,6 +166,15 @@ export function ResultsV3() {
           </div>
         )}
       </div>
+
+      <MobileFilterSheet
+        open={mobileSheet !== null}
+        onClose={() => setMobileSheet(null)}
+        filters={filters}
+        mode={mobileSheet ?? "filter"}
+        sort={sort}
+        onSortChange={setSort}
+      />
     </div>
   );
 }
