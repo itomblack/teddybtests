@@ -12,6 +12,13 @@ export type Prototype = {
 
 export const prototypes: Prototype[] = [
   {
+    slug: "search-results",
+    title: "Search Results Page",
+    description:
+      "Three search results page variants: tabbed, stacked sections, and adaptive layout — with Baymard UX guidelines.",
+    status: "in-progress",
+  },
+  {
     slug: "search",
     title: "Quick Search",
     description:
