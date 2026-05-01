@@ -12,6 +12,13 @@ export type Prototype = {
 
 export const prototypes: Prototype[] = [
   {
+    slug: "brand-module",
+    title: "Shop by Brand Module",
+    description:
+      "Five variations: editorial cards, tiered showcase, logo grid, full-bleed strip, and signature watch columns.",
+    status: "in-progress",
+  },
+  {
     slug: "search-results",
     title: "Search Results Page",
     description:
