@@ -12,6 +12,13 @@ export type Prototype = {
 
 export const prototypes: Prototype[] = [
   {
+    slug: "collection-scroll",
+    title: "Collection Sticky Scroll",
+    description:
+      "Article with sticky right-side collection panel that swaps as you scroll through each watch section.",
+    status: "in-progress",
+  },
+  {
     slug: "article-products",
     title: "Article Inline-Products",
     description:
